@@ -30,6 +30,12 @@ class KategoriModel {
         console.log("KategoriModel.deleteKategori: ", result);
         return result.affectedRows > 0;
     }
+
+    static async searchKategori(keyword) {
+        const [rows] = await database.execute('SELECT * FROM Kategori WHERE nama LIKE ?', [`%${keyword}%`]);
+        console.log("KategoriModel.searchKategori: ", rows);
+        return rows;
+    }
 }
 
 export default KategoriModel;
