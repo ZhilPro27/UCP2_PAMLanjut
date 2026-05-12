@@ -37,3 +37,5 @@ class KatalogModel {
         return rows;
     }
 }
+
+export default KatalogModel;
