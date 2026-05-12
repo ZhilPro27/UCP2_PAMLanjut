@@ -1,4 +1,4 @@
-import KategoriModel from "../models/kategori_model";
+import KategoriModel from "../models/kategori_model.js";
 
 class KategoriController {
     static async getAllKategori(req, res) {

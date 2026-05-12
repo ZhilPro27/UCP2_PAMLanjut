@@ -1,4 +1,4 @@
-import KatalogController from "../controllers/katalog_controller";
+import KatalogController from "../controllers/katalog_controller.js";
 import express from 'express';
 
 const router = express.Router();

@@ -1,4 +1,4 @@
-import KatalogModel from "../models/katalog_model";
+import KatalogModel from "../models/katalog_model.js";
 
 class KatalogController {
     static async getAllKatalog(req, res) {

@@ -1,4 +1,4 @@
-import database from '../config/database.js';
+import database from '../configs/database.js';
 
 class KatalogModel {
     static async getAllKatalog() {
