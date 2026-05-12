@@ -13,14 +13,14 @@ class KatalogModel {
         return rows[0];
     }
 
-    static async createKatalog(nama, kategori_id) {
-        const [result] = await database.execute('INSERT INTO Katalog (nama, kategori_id) VALUES (?, ?)', [nama, kategori_id]);
+    static async createKatalog(nama, deskripsi, kategori_id) {
+        const [result] = await database.execute('INSERT INTO Katalog (nama, deskripsi, kategori_id) VALUES (?, ?)', [nama, deskripsi, kategori_id]);
         console.log("KatalogModel.createKatalog: ", result);
         return result.insertId;
     }
 
-    static async updateKatalog(katalog_id, nama, kategori_id) {
-        const [result] = await database.execute('UPDATE Katalog SET nama = ?, kategori_id = ? WHERE katalog_id = ?', [nama, kategori_id, katalog_id]);
+    static async updateKatalog(katalog_id, nama, deskripsi, kategori_id) {
+        const [result] = await database.execute('UPDATE Katalog SET nama = ?, deskripsi = ?, kategori_id = ? WHERE katalog_id = ?', [nama, deskripsi, kategori_id, katalog_id]);
         console.log("KatalogModel.updateKatalog: ", result);
         return result.affectedRows > 0;
     }

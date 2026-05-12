@@ -28,10 +28,10 @@ class KatalogController {
     }
 
     static async createKatalog(req, res) {
-        const { nama, kategori_id } = req.body; 
+        const { nama, deskripsi, kategori_id } = req.body; 
         try {
-            const katalogId = await KatalogModel.createKatalog(nama, kategori_id);
-            console.log("KatalogController.createKatalog: ", { katalogId, nama, kategori_id });
+            const katalogId = await KatalogModel.createKatalog(nama, deskripsi, kategori_id);
+            console.log("KatalogController.createKatalog: ", { katalogId, nama, deskripsi, kategori_id });
             res.status(201).json({ katalog_id: katalogId });
         } catch (error) {
             console.error("KatalogController.createKatalog: ", error);
@@ -41,13 +41,13 @@ class KatalogController {
 
     static async updateKatalog(req, res) {
         const { id } = req.params;
-        const { nama, kategori_id } = req.body;
+        const { nama, deskripsi,  kategori_id } = req.body;
         try {
-            const success = await KatalogModel.updateKatalog(id, nama, kategori_id);
+            const success = await KatalogModel.updateKatalog(id, nama, deskripsi, kategori_id);
             if (!success) {
                 return res.status(404).json({ message: 'Katalog tidak ditemukan' });
             }
-            console.log("KatalogController.updateKatalog: ", { id, nama, kategori_id });
+            console.log("KatalogController.updateKatalog: ", { id, nama, deskripsi, kategori_id });
             res.json({ message: 'Katalog berhasil diperbarui' });
         } catch (error) {
             console.error("KatalogController.updateKatalog: ", error);
