@@ -1,5 +1,5 @@
-CREATE DATABASE DriveEase;
-USE DriveEase;
+CREATE DATABASE drive_ease;
+USE drive_ease;
 
 CREATE TABLE User (
     user_id INT AUTO_INCREMENT PRIMARY KEY,

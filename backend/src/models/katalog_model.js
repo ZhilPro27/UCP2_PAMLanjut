@@ -14,7 +14,7 @@ class KatalogModel {
     }
 
     static async createKatalog(nama, deskripsi, kategori_id) {
-        const [result] = await database.execute('INSERT INTO Katalog (nama, deskripsi, kategori_id) VALUES (?, ?)', [nama, deskripsi, kategori_id]);
+        const [result] = await database.execute('INSERT INTO Katalog (nama, deskripsi, kategori_id) VALUES (?, ?, ?)', [nama, deskripsi, kategori_id]);
         console.log("KatalogModel.createKatalog: ", result);
         return result.insertId;
     }

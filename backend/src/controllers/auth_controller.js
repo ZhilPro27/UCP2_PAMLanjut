@@ -11,11 +11,12 @@ class AuthController {
 
         try {
             const user = await UserModel.getUserByUsername(username);
-            if (!user || user.password !== password) {
-                return res.status(401).json({ message: 'username atau password tidak valid' });
+            if (!user) {
+                return res.status(400).json({ message: 'Username atau password salah' });
             }
-            if (!bcrypt.compareSync(password, user.password)) {
-                return res.status(401).json({ message: 'username atau password tidak valid' });
+            const passwordMatch = bcrypt.compareSync(password, user.password);
+            if (!passwordMatch) {
+                return res.status(400).json({ message: 'Username atau password salah' });
             }
             const token = jsonwebtoken.sign({ userId: user.user_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
             console.log("AuthController.login: ", { userId: user.user_id, token });
