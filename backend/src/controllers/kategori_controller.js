@@ -29,6 +29,9 @@ class KategoriController {
 
     static async createKategori(req, res) {
         const { nama } = req.body;
+        if (!nama) {
+            return res.status(400).json({ message: 'Nama kategori wajib diisi' });
+        }
         try {
             const kategoriId = await KategoriModel.createKategori(nama);
             console.log("KategoriController.createKategori: ", { kategoriId, nama });
@@ -42,6 +45,9 @@ class KategoriController {
     static async updateKategori(req, res) {
         const { id } = req.params;
         const { nama } = req.body;
+        if (!nama) {
+            return res.status(400).json({ message: 'Nama kategori wajib diisi' });
+        }
         try {
             const success = await KategoriModel.updateKategori(id, nama);
             if (!success) {
