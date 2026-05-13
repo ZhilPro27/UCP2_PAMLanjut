@@ -86,6 +86,7 @@ class KatalogController {
 
     static async searchKatalog(req, res) {
         const { keyword } = req.query;
+        console.log(keyword);
         try {
             const katalog = await KatalogModel.searchKatalog(keyword);
             console.log("KatalogController.searchKatalog: ", katalog);

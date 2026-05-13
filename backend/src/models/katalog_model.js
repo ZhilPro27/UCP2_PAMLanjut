@@ -32,7 +32,7 @@ class KatalogModel {
     }
 
     static async searchKatalog(keyword) {
-        const [rows] = await database.execute('SELECT * FROM Katalog WHERE nama LIKE ? OR nomor_polisi LIKE ?', [`%${keyword}%`]);
+        const [rows] = await database.execute('SELECT * FROM Katalog WHERE nama LIKE ? OR nomor_polisi LIKE ?', [`%${keyword}%`, `%${keyword}%`]);
         console.log("KatalogModel.searchKatalog: ", rows);
         return rows;
     }
