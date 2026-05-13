@@ -53,7 +53,7 @@ class KategoriController {
             return res.status(400).json({ message: 'Nama kategori wajib diisi' });
         }
         const isNamaExist = await KategoriModel.getKategoriByNama(nama);
-        if (isNamaExist) {
+        if (isNamaExist && isNamaExist.kategori_id !== parseInt(id)) {
             return res.status(400).json({ message: 'Nama kategori sudah ada' });
         }
         try {
