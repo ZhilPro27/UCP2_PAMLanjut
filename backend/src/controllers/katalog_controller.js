@@ -28,10 +28,13 @@ class KatalogController {
     }
 
     static async createKatalog(req, res) {
-        const { nama, deskripsi, kategori_id } = req.body; 
+        const { nama, deskripsi, kategori_id, harga, kondisi, status, nomor_polisi  } = req.body; 
+        if (!nama || !deskripsi || !kategori_id || !harga || !kondisi || !status || !nomor_polisi) {
+            return res.status(400).json({ message: 'semua kolom wajib diisi' });
+        }
         try {
-            const katalogId = await KatalogModel.createKatalog(nama, deskripsi, kategori_id);
-            console.log("KatalogController.createKatalog: ", { katalogId, nama, deskripsi, kategori_id });
+            const katalogId = await KatalogModel.createKatalog(nama, deskripsi, kategori_id, harga, kondisi, status, nomor_polisi);
+            console.log("KatalogController.createKatalog: ", { katalogId, nama, deskripsi, kategori_id, harga, kondisi, status, nomor_polisi });
             res.status(201).json({ katalog_id: katalogId });
         } catch (error) {
             console.error("KatalogController.createKatalog: ", error);
@@ -41,13 +44,16 @@ class KatalogController {
 
     static async updateKatalog(req, res) {
         const { id } = req.params;
-        const { nama, deskripsi,  kategori_id } = req.body;
+        const { nama, deskripsi,  kategori_id, harga, kondisi, status, nomor_polisi } = req.body;
+        if (!nama || !deskripsi || !kategori_id || !harga || !kondisi || !status || !nomor_polisi) {
+            return res.status(400).json({ message: 'semua kolom wajib diisi' });
+        }
         try {
-            const success = await KatalogModel.updateKatalog(id, nama, deskripsi, kategori_id);
+            const success = await KatalogModel.updateKatalog(id, nama, deskripsi, kategori_id, harga, kondisi, status, nomor_polisi);
             if (!success) {
                 return res.status(404).json({ message: 'Katalog tidak ditemukan' });
             }
-            console.log("KatalogController.updateKatalog: ", { id, nama, deskripsi, kategori_id });
+            console.log("KatalogController.updateKatalog: ", { id, nama, deskripsi, kategori_id, harga, kondisi, status, nomor_polisi });
             res.json({ message: 'Katalog berhasil diperbarui' });
         } catch (error) {
             console.error("KatalogController.updateKatalog: ", error);

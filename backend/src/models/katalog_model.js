@@ -13,14 +13,14 @@ class KatalogModel {
         return rows[0];
     }
 
-    static async createKatalog(nama, deskripsi, kategori_id) {
-        const [result] = await database.execute('INSERT INTO Katalog (nama, deskripsi, kategori_id) VALUES (?, ?, ?)', [nama, deskripsi, kategori_id]);
+    static async createKatalog(nama, deskripsi, kategori_id, harga, kondisi, status, nomor_polisi) {
+        const [result] = await database.execute('INSERT INTO Katalog (nama, deskripsi, kategori_id, harga, kondisi, status, nomor_polisi) VALUES (?, ?, ?, ?, ?, ?, ?)', [nama, deskripsi, kategori_id, harga, kondisi, status, nomor_polisi]);
         console.log("KatalogModel.createKatalog: ", result);
         return result.insertId;
     }
 
-    static async updateKatalog(katalog_id, nama, deskripsi, kategori_id) {
-        const [result] = await database.execute('UPDATE Katalog SET nama = ?, deskripsi = ?, kategori_id = ? WHERE katalog_id = ?', [nama, deskripsi, kategori_id, katalog_id]);
+    static async updateKatalog(katalog_id, nama, deskripsi, kategori_id, harga, kondisi, status, nomor_polisi) {
+        const [result] = await database.execute('UPDATE Katalog SET nama = ?, deskripsi = ?, kategori_id = ? WHERE katalog_id = ?, harga = ?, kondisi = ?, status = ?, nomor_polisi = ?', [nama, deskripsi, kategori_id, katalog_id, harga, kondisi, status, nomor_polisi]);
         console.log("KatalogModel.updateKatalog: ", result);
         return result.affectedRows > 0;
     }
@@ -32,7 +32,7 @@ class KatalogModel {
     }
 
     static async searchKatalog(keyword) {
-        const [rows] = await database.execute('SELECT * FROM Katalog WHERE nama LIKE ?', [`%${keyword}%`]);
+        const [rows] = await database.execute('SELECT * FROM Katalog WHERE nama LIKE ? OR nomor_polisi LIKE ?', [`%${keyword}%`]);
         console.log("KatalogModel.searchKatalog: ", rows);
         return rows;
     }
