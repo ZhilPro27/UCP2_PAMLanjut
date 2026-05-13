@@ -90,6 +90,9 @@ class KatalogController {
         try {
             const katalog = await KatalogModel.searchKatalog(keyword);
             console.log("KatalogController.searchKatalog: ", katalog);
+            if (katalog.length === 0) {
+                return res.status(404).json({ message: 'Katalog tidak ditemukan' });
+            }
             res.json(katalog);
         } catch (error) {
             console.error("KatalogController.searchKatalog: ", error);

@@ -382,7 +382,9 @@ Contoh response yang diberikan jika data ditemukan:
 ```
 Contoh response jika data tidak ada:
 ```
-[]
+{
+    "message": "Katalog tidak ditemukan"
+}
 ```
 
 ---
