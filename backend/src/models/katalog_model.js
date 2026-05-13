@@ -36,6 +36,12 @@ class KatalogModel {
         console.log("KatalogModel.searchKatalog: ", rows);
         return rows;
     }
+
+    static async getKatalogByNomorPolisi(nomor_polisi) {
+        const [rows] = await database.execute('SELECT * FROM Katalog WHERE nomor_polisi = ?', [nomor_polisi]);
+        console.log("KatalogModel.getKatalogByNomorPolisi: ", rows);
+        return rows[0];
+    }
 }
 
 export default KatalogModel;

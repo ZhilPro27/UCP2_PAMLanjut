@@ -32,6 +32,10 @@ class KatalogController {
         if (!nama || !deskripsi || !kategori_id || !harga || !kondisi || !status || !nomor_polisi) {
             return res.status(400).json({ message: 'semua kolom wajib diisi' });
         }
+        const isNomorPolisiExist = await KatalogModel.getKatalogByNomorPolisi(nomor_polisi);
+        if (isNomorPolisiExist) {
+            return res.status(400).json({ message: 'Nomor polisi sudah ada' });
+        }
         try {
             const katalogId = await KatalogModel.createKatalog(nama, deskripsi, kategori_id, harga, kondisi, status, nomor_polisi);
             console.log("KatalogController.createKatalog: ", { katalogId, nama, deskripsi, kategori_id, harga, kondisi, status, nomor_polisi });
@@ -47,6 +51,10 @@ class KatalogController {
         const { nama, deskripsi,  kategori_id, harga, kondisi, status, nomor_polisi } = req.body;
         if (!nama || !deskripsi || !kategori_id || !harga || !kondisi || !status || !nomor_polisi) {
             return res.status(400).json({ message: 'semua kolom wajib diisi' });
+        }
+        const isNomorPolisiExist = await KatalogModel.getKatalogByNomorPolisi(nomor_polisi);
+        if (isNomorPolisiExist && isNomorPolisiExist.katalog_id !== parseInt(id)) {
+            return res.status(400).json({ message: 'Nomor polisi sudah ada' });
         }
         try {
             const success = await KatalogModel.updateKatalog(id, nama, deskripsi, kategori_id, harga, kondisi, status, nomor_polisi);
