@@ -20,7 +20,7 @@ class KatalogModel {
     }
 
     static async updateKatalog(katalog_id, nama, deskripsi, kategori_id, harga, kondisi, status, nomor_polisi) {
-        const [result] = await database.execute('UPDATE Katalog SET nama = ?, deskripsi = ?, kategori_id = ? WHERE katalog_id = ?, harga = ?, kondisi = ?, status = ?, nomor_polisi = ?', [nama, deskripsi, kategori_id, katalog_id, harga, kondisi, status, nomor_polisi]);
+        const [result] = await database.execute('UPDATE Katalog SET nama = ?, deskripsi = ?, kategori_id = ?, harga = ?, kondisi = ?, status = ?, nomor_polisi = ? WHERE katalog_id = ?', [nama, deskripsi, kategori_id, harga, kondisi, status, nomor_polisi, katalog_id]);
         console.log("KatalogModel.updateKatalog: ", result);
         return result.affectedRows > 0;
     }
