@@ -32,7 +32,7 @@ class KategoriController {
         if (!nama) {
             return res.status(400).json({ message: 'Nama kategori wajib diisi' });
         }
-        isNamaExist = await KategoriModel.getKategoriByNama(nama);
+        const isNamaExist = await KategoriModel.getKategoriByNama(nama);
         if (isNamaExist) {
             return res.status(400).json({ message: 'Nama kategori sudah ada' });
         }
@@ -52,7 +52,7 @@ class KategoriController {
         if (!nama) {
             return res.status(400).json({ message: 'Nama kategori wajib diisi' });
         }
-        isNamaExist = await KategoriModel.getKategoriByNama(nama);
+        const isNamaExist = await KategoriModel.getKategoriByNama(nama);
         if (isNamaExist) {
             return res.status(400).json({ message: 'Nama kategori sudah ada' });
         }
