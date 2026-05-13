@@ -36,6 +36,12 @@ class KategoriModel {
         console.log("KategoriModel.searchKategori: ", rows);
         return rows;
     }
+
+    static async getKategoriByNama(nama) {
+        const [rows] = await database.execute('SELECT * FROM Kategori WHERE nama = ?', [nama]);
+        console.log("KategoriModel.getKategoriByNama: ", rows);
+        return rows[0];
+    }
 }
 
 export default KategoriModel;

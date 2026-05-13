@@ -32,6 +32,10 @@ class KategoriController {
         if (!nama) {
             return res.status(400).json({ message: 'Nama kategori wajib diisi' });
         }
+        isNamaExist = await KategoriModel.getKategoriByNama(nama);
+        if (isNamaExist) {
+            return res.status(400).json({ message: 'Nama kategori sudah ada' });
+        }
         try {
             const kategoriId = await KategoriModel.createKategori(nama);
             console.log("KategoriController.createKategori: ", { kategoriId, nama });
@@ -47,6 +51,10 @@ class KategoriController {
         const { nama } = req.body;
         if (!nama) {
             return res.status(400).json({ message: 'Nama kategori wajib diisi' });
+        }
+        isNamaExist = await KategoriModel.getKategoriByNama(nama);
+        if (isNamaExist) {
+            return res.status(400).json({ message: 'Nama kategori sudah ada' });
         }
         try {
             const success = await KategoriModel.updateKategori(id, nama);
