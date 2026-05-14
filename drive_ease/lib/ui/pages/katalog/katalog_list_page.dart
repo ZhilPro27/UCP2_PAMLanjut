@@ -70,7 +70,7 @@ class _KatalogListPageState extends State<KatalogListPage> {
                           context,
                           '/katalog/detail',
                           arguments: {'id': katalog.katalog_id},
-                        );
+                        ).then((_) => context.read<KatalogBloc>().add(FetchKatalog()));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -153,7 +153,8 @@ class _KatalogListPageState extends State<KatalogListPage> {
           right: 16,
           child: FloatingActionButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/katalog/form');
+              Navigator.pushNamed(context, '/katalog/form')
+                  .then((_) => context.read<KatalogBloc>().add(FetchKatalog()));
             },
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: ShadTheme.of(context).colorScheme.primaryForeground,

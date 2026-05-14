@@ -10,6 +10,7 @@ import '../../../logic/bloc/kategori/kategori_bloc.dart';
 import '../../../logic/bloc/kategori/kategori_event.dart';
 import '../../../logic/bloc/kategori/kategori_state.dart';
 import '../../core/validators.dart';
+import '../../core/constants.dart';
 
 class KatalogFormPage extends StatefulWidget {
   final int? katalogId;
@@ -32,8 +33,8 @@ class _KatalogFormPageState extends State<KatalogFormPage> {
   String? _selectedKondisi;
   String? _selectedStatus;
 
-  final _kondisiOptions = ['Baru', 'Bekas'];
-  final _statusOptions = ['Tersedia', 'Disewa', 'Dalam Perawatan'];
+  final _kondisiOptions = kondisiOptions;
+  final _statusOptions = statusOptions;
 
   // Not strictly using a mask for Indo license plate since length varies, but converting to uppercase
   final _nopolFormatter = TextInputFormatter.withFunction((oldValue, newValue) {

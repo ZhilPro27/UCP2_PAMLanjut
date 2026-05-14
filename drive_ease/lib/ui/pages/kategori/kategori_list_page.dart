@@ -125,7 +125,7 @@ class _KategoriListPageState extends State<KategoriListPage> {
                                   context,
                                   '/kategori/form',
                                   arguments: {'id': kategori.kategori_id},
-                                );
+                                ).then((_) => context.read<KategoriBloc>().add(FetchKategori()));
                               },
                             ),
                             IconButton(
@@ -147,7 +147,8 @@ class _KategoriListPageState extends State<KategoriListPage> {
             right: 16,
             child: FloatingActionButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/kategori/form');
+                Navigator.pushNamed(context, '/kategori/form')
+                    .then((_) => context.read<KategoriBloc>().add(FetchKategori()));
               },
               backgroundColor: Theme.of(context).colorScheme.primary,
               foregroundColor: ShadTheme.of(context).colorScheme.primaryForeground,
