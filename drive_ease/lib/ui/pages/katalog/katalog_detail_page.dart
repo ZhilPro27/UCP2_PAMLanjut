@@ -133,7 +133,7 @@ class _KatalogDetailPageState extends State<KatalogDetailPage> {
                     const SizedBox(height: 16),
                     _buildInfoRow(context, 'Nomor Polisi', katalog.nomor_polisi),
                     _buildInfoRow(context, 'Kondisi', katalog.kondisi),
-                    _buildInfoRow(context, 'Kategori ID', katalog.kategori_id), // Wait until we resolve kategori name
+                    _buildInfoRow(context, 'Kategori ID', katalog.kategori_id.toString()), // Wait until we resolve kategori name
                     const SizedBox(height: 16),
                     Text(
                       'Deskripsi',

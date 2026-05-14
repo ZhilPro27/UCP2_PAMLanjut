@@ -69,7 +69,7 @@ class _KatalogListPageState extends State<KatalogListPage> {
                         Navigator.pushNamed(
                           context,
                           '/katalog/detail',
-                          arguments: {'id': int.tryParse(katalog.katalog_id) ?? 0},
+                          arguments: {'id': katalog.katalog_id},
                         );
                       },
                       child: Padding(

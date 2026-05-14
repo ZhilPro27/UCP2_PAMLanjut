@@ -124,13 +124,13 @@ class _KategoriListPageState extends State<KategoriListPage> {
                                 Navigator.pushNamed(
                                   context,
                                   '/kategori/form',
-                                  arguments: {'id': int.tryParse(kategori.kategori_id) ?? 0},
+                                  arguments: {'id': kategori.kategori_id},
                                 );
                               },
                             ),
                             IconButton(
                               icon: Icon(Icons.delete, size: 20, color: ShadTheme.of(context).colorScheme.destructive),
-                              onPressed: () => _showDeleteDialog(int.tryParse(kategori.kategori_id) ?? 0),
+                              onPressed: () => _showDeleteDialog(kategori.kategori_id),
                             ),
                           ],
                         ),
