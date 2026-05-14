@@ -31,7 +31,7 @@ class KategoriRepository {
     final token = await storageProvider.getToken();
 
     final response = await http.post(
-      Uri.parse('$baseUrl/katergori'),
+      Uri.parse('$baseUrl/kategori'),
       headers: {
         'content-type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -79,6 +79,25 @@ class KategoriRepository {
     if (response.statusCode != 200 && response.statusCode != 204) {
       final data = jsonDecode(response.body);
       throw data['message'] ?? Exception('Gagal menghapus kategori');
+    }
+  }
+
+  Future <KategoriModel> getKategoriById(int id) async {
+    final token = await storageProvider.getToken();
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/kategori/$id'),
+      headers: {
+        'accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      }
+    );
+
+    if(response.statusCode == 200) {
+      final Map<String, dynamic> body = jsonDecode(response.body);
+      return KategoriModel.fromJson(body['data']);
+    } else {
+      throw Exception('Gagal mengambil data kategori');
     }
   }
 }
