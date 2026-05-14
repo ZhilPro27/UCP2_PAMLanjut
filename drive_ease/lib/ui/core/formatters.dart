@@ -1,5 +1,4 @@
 import 'package:intl/intl.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:flutter/services.dart';
 
 class AppFormatters {
@@ -90,4 +89,4 @@ class _IndonesianLicensePlateFormatter extends TextInputFormatter {
       selection: TextSelection.collapsed(offset: formatted.length),
     );
   }
-}
+}
