@@ -7,8 +7,14 @@ class UserModel {
         return rows[0];
     }
 
-    static async createUser(username, password) {
-        const [result] = await database.execute('INSERT INTO User (username, password) VALUES (?, ?)', [username, password]);
+    static async getUserByEmail(email) {
+        const [rows] = await database.execute('SELECT * FROM User WHERE email = ?', [email]);
+        console.log("UserModel.getUserByEmail: ", rows);
+        return rows[0];
+    }
+
+    static async createUser(email, username, password) {
+        const [result] = await database.execute('INSERT INTO User (email, username, password) VALUES (?, ?, ?)', [email, username, password]);
         console.log("UserModel.createUser: ", result);
         return result.insertId;
     }

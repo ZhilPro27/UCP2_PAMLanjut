@@ -20,7 +20,8 @@ Endpoint ini digunakan untuk melakukan register sebagai user dari aplikasi.
 Contoh data yang dikirimkan:
 ```
 {
-    "username":"zhilal",
+    "email":"zhilal@mail.com",
+    "username":"Zhilal Krisna",
     "password":"123"
 }
 ```
@@ -39,13 +40,20 @@ Contoh response yang diberikan jika username sudah digunakan:
 }
 ```
 
+Contoh response yang diberikan jika email sudah digunakan:
+```
+{
+    "message": "Email sudah digunakan"
+}
+```
+
 #### 1.2 POST /login
 Endpoint ini digunakan untuk melakukan login sebagai user dari aplikasi.
 
 Contoh data yang dikirimkan:
 ```
 {
-    "username":"zhilal",
+    "email":"zhilal@mail.com",
     "password":"123"
 }
 ```
