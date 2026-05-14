@@ -61,7 +61,10 @@ Contoh data yang dikirimkan:
 Contoh response yang diberikan jika sukses:
 ```
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc3ODY4MjQxNiwiZXhwIjoxNzc4Njg2MDE2fQ.zNZlKcn0X29xUiQHjRYfTLOSrC_prR5lZJmAZXBbvl0"
+    "user_id": 1,
+    "email": "zhilal@mail.com",
+    "username": "Zhilal Krisna",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc3ODc3NDAyOSwiZXhwIjoxNzc4Nzc3NjI5fQ.xesqLPGlmNl-peoSre9jZ3RZO0M_T2sHoWHAD-BHcN4"
 }
 ```
 

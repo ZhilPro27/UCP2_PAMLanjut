@@ -23,7 +23,7 @@ class AuthController {
             }
             const token = jsonwebtoken.sign({ userId: user.user_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
             console.log("AuthController.login: ", { userId: user.user_id, token });
-            res.json({ token });
+            res.json({ user_id: user.user_id, email: user.email, username: user.username, token });
         } catch (error) {
             console.error("AuthController.login: ", error);
             res.status(500).json({ message: 'Internal server error' });
