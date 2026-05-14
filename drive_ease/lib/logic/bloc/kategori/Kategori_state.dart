@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:drive_ease/data/models/Kategori_model.dart';
+import 'package:drive_ease/data/models/kategori_model.dart';
 
 abstract class KategoriState extends Equatable {
   const KategoriState();
@@ -11,25 +11,25 @@ class KategoriInitial extends KategoriState{}
 class KategoriLoading extends KategoriState{}
 class KategoriLoaded extends KategoriState{
   final List<KategoriModel> kategoriList;
-  KategoriLoaded(this.kategoriList);
+  const KategoriLoaded(this.kategoriList);
   @override
   List<Object> get props => [kategoriList];
 }
 class KategoriDetailLoaded extends KategoriState {
   final KategoriModel kategori;
-  KategoriDetailLoaded(this.kategori);
+  const KategoriDetailLoaded(this.kategori);
   @override
   List<Object> get props => [kategori];
 }
 class KategoriError extends KategoriState {
   final String message;
-  KategoriError(this.message);
+  const KategoriError(this.message);
   @override
   List<Object> get props => [message];
 }
 class KategoriActionSuccess extends KategoriState {
   final String message;
-  KategoriActionSuccess(this.message);
+  const KategoriActionSuccess(this.message);
   @override
   List<Object> get props => [message];
 }

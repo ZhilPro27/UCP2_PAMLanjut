@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:drive_ease/data/repositories/Kategori_repository.dart';
-import 'package:drive_ease/logic/bloc/kategori/Kategori_event.dart';
-import 'package:drive_ease/logic/bloc/kategori/Kategori_state.dart';
+import 'package:drive_ease/data/repositories/kategori_repository.dart';
+import 'package:drive_ease/logic/bloc/kategori/kategori_event.dart';
+import 'package:drive_ease/logic/bloc/kategori/kategori_state.dart';
 
 class KategoriBloc extends Bloc<KategoriEvent, KategoriState> {
   final KategoriRepository repository;
 
   KategoriBloc({required this.repository}) : super(KategoriInitial()) {
-    String _cleanErrorMessage(Object error) {
+    String cleanErrorMessage(Object error) {
       return error.toString().replaceAll('Exception: ', '');
     }
 
@@ -27,7 +27,7 @@ class KategoriBloc extends Bloc<KategoriEvent, KategoriState> {
         final kategori = await repository.getKategoriById(event.id);
         emit(KategoriDetailLoaded(kategori));
       } catch (e) {
-        emit(KategoriError(_cleanErrorMessage(e)));
+        emit(KategoriError(cleanErrorMessage(e)));
       }
     });
 
@@ -38,7 +38,7 @@ class KategoriBloc extends Bloc<KategoriEvent, KategoriState> {
         emit(KategoriActionSuccess("Kategori berhasil ditambahkan"));
         add(FetchKategori());
       } catch (e) {
-        emit(KategoriError(_cleanErrorMessage(e)));
+        emit(KategoriError(cleanErrorMessage(e)));
       }
     });
 
@@ -49,7 +49,7 @@ class KategoriBloc extends Bloc<KategoriEvent, KategoriState> {
         emit(KategoriActionSuccess("Kategori berhasil diperbarui"));
         add(FetchKategori());
       } catch (e) {
-        emit(KategoriError(_cleanErrorMessage(e)));
+        emit(KategoriError(cleanErrorMessage(e)));
       }
     });
 
@@ -60,7 +60,7 @@ class KategoriBloc extends Bloc<KategoriEvent, KategoriState> {
         emit(KategoriActionSuccess("Kategori berhasil dihapus"));
         add(FetchKategori());
       } catch (e) {
-        emit(KategoriError(_cleanErrorMessage(e)));
+        emit(KategoriError(cleanErrorMessage(e)));
       }
     });
   }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:drive_ease/data/models/Kategori_model.dart';
-import 'package:drive_ease/data/providers/Storage_provider.dart';
+import 'package:drive_ease/data/models/kategori_model.dart';
+import 'package:drive_ease/data/providers/storage_provider.dart';
 
 class KategoriRepository {
   final String baseUrl = "http://10.0.2.2:3000/api";
