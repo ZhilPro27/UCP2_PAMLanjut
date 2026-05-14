@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:drive_ease/data/repositories/Katalog_repository.dart';
-import 'package:drive_ease/logic/bloc/katalog/Katalog_event.dart';
-import 'package:drive_ease/logic/bloc/katalog/Katalog_state.dart';
+import 'package:drive_ease/data/repositories/katalog_repository.dart';
+import 'package:drive_ease/logic/bloc/katalog/katalog_event.dart';
+import 'package:drive_ease/logic/bloc/katalog/katalog_state.dart';
 
 class KatalogBloc extends Bloc<KatalogEvent, KatalogState> {
   final KatalogRepository repository;
 
   KatalogBloc({required this.repository}) : super(KatalogInitial()) {
-    String _cleanErrorMessage(Object error) {
+    String cleanErrorMessage(Object error) {
       return error.toString().replaceAll('Exception: ', '');
     }
 
@@ -17,7 +17,7 @@ class KatalogBloc extends Bloc<KatalogEvent, KatalogState> {
         final list = await repository.getAllKatalog();
         emit(KatalogLoaded(list));
       } catch (e) {
-        emit(KatalogError(_cleanErrorMessage(e)));
+        emit(KatalogError(cleanErrorMessage(e)));
       }
     });
 
@@ -27,7 +27,7 @@ class KatalogBloc extends Bloc<KatalogEvent, KatalogState> {
         final katalog = await repository.getKatalogById(event.id);
         emit(KatalogDetailLoaded(katalog));
       } catch (e) {
-        emit(KatalogError(_cleanErrorMessage(e)));
+        emit(KatalogError(cleanErrorMessage(e)));
       }
     });
 
@@ -38,7 +38,7 @@ class KatalogBloc extends Bloc<KatalogEvent, KatalogState> {
         emit(KatalogActionSuccess("Katalog berhasil ditambahkan"));
         add(FetchKatalog());
       } catch (e) {
-        emit(KatalogError(_cleanErrorMessage(e)));
+        emit(KatalogError(cleanErrorMessage(e)));
       }
     });
 
@@ -49,7 +49,7 @@ class KatalogBloc extends Bloc<KatalogEvent, KatalogState> {
         emit(KatalogActionSuccess("Katalog berhasil diperbarui"));
         add(FetchKatalog());
       } catch (e) {
-        emit(KatalogError(_cleanErrorMessage(e)));
+        emit(KatalogError(cleanErrorMessage(e)));
       }
     });
 
@@ -60,7 +60,7 @@ class KatalogBloc extends Bloc<KatalogEvent, KatalogState> {
         emit(KatalogActionSuccess("Katalog berhasil dihapus"));
         add(FetchKatalog());
       } catch (e) {
-        emit(KatalogError(_cleanErrorMessage(e)));
+        emit(KatalogError(cleanErrorMessage(e)));
       }
     });
 
@@ -70,7 +70,7 @@ class KatalogBloc extends Bloc<KatalogEvent, KatalogState> {
         final results = await repository.searchKatalog(event.query);
         emit(KatalogSearchLoaded(results));
       } catch (e) {
-        emit(KatalogError(_cleanErrorMessage(e)));
+        emit(KatalogError(cleanErrorMessage(e)));
       }
     });
   }
