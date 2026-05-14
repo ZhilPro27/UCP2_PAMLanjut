@@ -5,7 +5,6 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../../logic/bloc/kategori/kategori_bloc.dart';
 import '../../../logic/bloc/kategori/kategori_event.dart';
 import '../../../logic/bloc/kategori/kategori_state.dart';
-import '../../../data/models/kategori_model.dart';
 import '../../core/formatters.dart';
 import '../../widgets/loading_skeleton.dart';
 import '../../widgets/error_widget.dart';
@@ -20,8 +19,6 @@ class KategoriListPage extends StatefulWidget {
 }
 
 class _KategoriListPageState extends State<KategoriListPage> {
-  List<KategoriModel> _cachedList = [];
-
   @override
   void initState() {
     super.initState();
@@ -62,24 +59,34 @@ class _KategoriListPageState extends State<KategoriListPage> {
       child: Stack(
         children: [
           BlocBuilder<KategoriBloc, KategoriState>(
-            buildWhen: (previous, current) => current is! KategoriActionSuccess,
+            // Rebuild hanya saat ada data baru atau error.
+            // Saat Loading/ActionSuccess, gunakan cache di BLoC.
+            buildWhen: (previous, current) {
+              return current is KategoriLoaded ||
+                  current is KategoriError ||
+                  current is KategoriInitial ||
+                  // Rebuild saat Loading hanya jika cache masih kosong (first load)
+                  (current is KategoriLoading &&
+                      context.read<KategoriBloc>().kategoriList.isEmpty);
+            },
             builder: (context, state) {
-              if (state is KategoriLoaded) {
-                _cachedList = state.kategoriList;
-              }
+              // Ambil data dari cache BLoC — selalu ada meskipun state sedang Loading
+              final cachedList = context.read<KategoriBloc>().kategoriList;
 
-              if (state is KategoriLoading || state is KategoriInitial) {
-                if (_cachedList.isEmpty) {
-                  return const LoadingSkeleton();
-                }
-              } else if (state is KategoriError && _cachedList.isEmpty) {
+              if (state is KategoriError && cachedList.isEmpty) {
                 return ErrorStateWidget(
                   message: state.message,
                   onRetry: () => context.read<KategoriBloc>().add(FetchKategori()),
                 );
               }
 
-              if (_cachedList.isEmpty && !(state is KategoriLoading || state is KategoriInitial)) {
+              // Tampilkan skeleton hanya saat benar-benar belum ada data
+              if ((state is KategoriLoading || state is KategoriInitial) &&
+                  cachedList.isEmpty) {
+                return const LoadingSkeleton();
+              }
+
+              if (cachedList.isEmpty) {
                 return const EmptyStateWidget(
                   title: 'Kategori Kosong',
                   message: 'Belum ada kategori yang ditambahkan.',
@@ -90,11 +97,11 @@ class _KategoriListPageState extends State<KategoriListPage> {
               return ListView.builder(
                 padding: const EdgeInsets.only(
                     left: 16, right: 16, top: 16, bottom: 80),
-                itemCount: _cachedList.length,
+                itemCount: cachedList.length,
                 itemBuilder: (context, index) {
-                  final kategori = _cachedList[index];
+                  final kategori = cachedList[index];
                   final parsedDate = DateTime.tryParse(kategori.updated_at);
-                  
+
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
                     color: Theme.of(context).colorScheme.surface,
@@ -138,7 +145,10 @@ class _KategoriListPageState extends State<KategoriListPage> {
                                 context,
                                 '/kategori/form',
                                 arguments: {'id': kategori.kategori_id},
-                              ).then((_) => context.read<KategoriBloc>().add(FetchKategori()));
+                              ).then((_) {
+                                if (!mounted) return;
+                                context.read<KategoriBloc>().add(FetchKategori());
+                              });
                             },
                           ),
                           IconButton(
@@ -159,7 +169,10 @@ class _KategoriListPageState extends State<KategoriListPage> {
             child: FloatingActionButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/kategori/form')
-                    .then((_) => context.read<KategoriBloc>().add(FetchKategori()));
+                    .then((_) {
+                      if (!mounted) return;
+                      context.read<KategoriBloc>().add(FetchKategori());
+                    });
               },
               backgroundColor: Theme.of(context).colorScheme.primary,
               foregroundColor: ShadTheme.of(context).colorScheme.primaryForeground,

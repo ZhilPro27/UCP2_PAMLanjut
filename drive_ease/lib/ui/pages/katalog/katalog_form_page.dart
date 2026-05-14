@@ -37,6 +37,9 @@ class _KatalogFormPageState extends State<KatalogFormPage> {
   final _kondisiOptions = kondisiOptions;
   final _statusOptions = statusOptions;
 
+  /// Flag untuk memastikan Navigator.pop() hanya dipanggil SATU KALI.
+  bool _hasNavigated = false;
+
   bool get isEditing => widget.katalogId != null;
 
   @override
@@ -100,11 +103,15 @@ class _KatalogFormPageState extends State<KatalogFormPage> {
       body: BlocListener<KatalogBloc, KatalogState>(
         listener: (context, state) {
           if (state is KatalogActionSuccess) {
+            // Guard: hanya pop SATU KALI.
+            if (_hasNavigated || !mounted) return;
+            _hasNavigated = true;
             ShadToaster.of(context).show(
               ShadToast(description: Text(state.message)),
             );
             Navigator.pop(context);
           } else if (state is KatalogError) {
+            if (!mounted) return;
             ShadToaster.of(context).show(
               ShadToast.destructive(description: Text(state.message)),
             );

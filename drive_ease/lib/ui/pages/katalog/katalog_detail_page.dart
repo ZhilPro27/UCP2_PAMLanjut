@@ -21,6 +21,11 @@ class KatalogDetailPage extends StatefulWidget {
 }
 
 class _KatalogDetailPageState extends State<KatalogDetailPage> {
+  /// Flag untuk memastikan Navigator.pop() hanya dipanggil SATU KALI.
+  /// Tanpa ini, BlocListener global bisa menembak pop() lagi setelah
+  /// widget sudah di-unmount, yang merusak seluruh navigation stack.
+  bool _hasNavigated = false;
+
   @override
   void initState() {
     super.initState();
@@ -49,13 +54,17 @@ class _KatalogDetailPageState extends State<KatalogDetailPage> {
     return BlocListener<KatalogBloc, KatalogState>(
       listener: (context, state) {
         if (state is KatalogActionSuccess) {
+          // Guard: hanya pop SATU KALI. Mencegah double-pop yang mengosongkan stack.
+          if (_hasNavigated || !mounted) return;
+          _hasNavigated = true;
           ShadToaster.of(context).show(
             ShadToast(
               description: Text(state.message),
             ),
           );
-          Navigator.pop(context); // Go back after success delete
-        } else if (state is KatalogError && ModalRoute.of(context)?.isCurrent == true) {
+          Navigator.pop(context);
+        } else if (state is KatalogError && mounted &&
+            ModalRoute.of(context)?.isCurrent == true) {
           ShadToaster.of(context).show(
             ShadToast.destructive(
               description: Text(state.message),
@@ -150,9 +159,9 @@ class _KatalogDetailPageState extends State<KatalogDetailPage> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                      if (katalog.updated_at != null)
+                      if (katalog.updated_at.isNotEmpty)
                         Text(
-                          'Terakhir diperbarui: ${AppFormatters.formatDateTime(DateTime.tryParse(katalog.updated_at!))}',
+                          'Terakhir diperbarui: ${AppFormatters.formatDateTime(DateTime.tryParse(katalog.updated_at))}',
                           style: TextStyle(
                             fontSize: 12,
                             color: ShadTheme.of(context).colorScheme.mutedForeground,

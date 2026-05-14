@@ -6,7 +6,6 @@ import 'dart:async';
 import '../../../logic/bloc/katalog/katalog_bloc.dart';
 import '../../../logic/bloc/katalog/katalog_event.dart';
 import '../../../logic/bloc/katalog/katalog_state.dart';
-import '../../../data/models/katalog_model.dart';
 import '../../core/formatters.dart';
 import '../../widgets/loading_skeleton.dart';
 import '../../widgets/error_widget.dart';
@@ -21,7 +20,6 @@ class KatalogListPage extends StatefulWidget {
 }
 
 class _KatalogListPageState extends State<KatalogListPage> {
-  List<KatalogModel> _cachedList = [];
   final _searchController = TextEditingController();
   Timer? _debounce;
 
@@ -63,28 +61,37 @@ class _KatalogListPageState extends State<KatalogListPage> {
           child: Stack(
             children: [
               BlocBuilder<KatalogBloc, KatalogState>(
-                buildWhen: (previous, current) => current is! KatalogActionSuccess,
+                // Rebuild hanya saat state membawa data baru atau error.
+                // Saat Loading/ActionSuccess, gunakan cache di BLoC.
+                buildWhen: (previous, current) {
+                  return current is KatalogLoaded ||
+                      current is KatalogSearchLoaded ||
+                      current is KatalogError ||
+                      current is KatalogInitial ||
+                      // Rebuild saat Loading hanya jika cache masih kosong (first load)
+                      (current is KatalogLoading &&
+                          context.read<KatalogBloc>().katalogList.isEmpty);
+                },
                 builder: (context, state) {
-                  if (state is KatalogLoaded) {
-                    _cachedList = state.katalogList;
-                  } else if (state is KatalogSearchLoaded) {
-                    _cachedList = state.katalogList;
-                  }
+                  // Ambil data dari cache BLoC — selalu ada meskipun state sedang Loading
+                  final cachedList = context.read<KatalogBloc>().katalogList;
 
-                  if (state is KatalogLoading || state is KatalogInitial) {
-                    if (_cachedList.isEmpty) {
-                      return const LoadingSkeleton();
-                    }
-                  } else if (state is KatalogError && _cachedList.isEmpty) {
+                  if (state is KatalogError && cachedList.isEmpty) {
                     return ErrorStateWidget(
                       message: state.message,
-                      onRetry: () => _searchController.text.isEmpty 
-                        ? context.read<KatalogBloc>().add(FetchKatalog())
-                        : context.read<KatalogBloc>().add(SearchKatalog(_searchController.text)),
+                      onRetry: () => _searchController.text.isEmpty
+                          ? context.read<KatalogBloc>().add(FetchKatalog())
+                          : context.read<KatalogBloc>().add(SearchKatalog(_searchController.text)),
                     );
                   }
 
-                  if (_cachedList.isEmpty && !(state is KatalogLoading || state is KatalogInitial)) {
+                  // Tampilkan skeleton hanya saat benar-benar belum ada data
+                  if ((state is KatalogLoading || state is KatalogInitial) &&
+                      cachedList.isEmpty) {
+                    return const LoadingSkeleton();
+                  }
+
+                  if (cachedList.isEmpty) {
                     return const EmptyStateWidget(
                       title: 'Katalog Kosong',
                       message: 'Belum ada katalog kendaraan yang ditemukan.',
@@ -95,9 +102,9 @@ class _KatalogListPageState extends State<KatalogListPage> {
                   return ListView.builder(
                     padding: const EdgeInsets.only(
                         left: 16, right: 16, top: 0, bottom: 80),
-                    itemCount: _cachedList.length,
+                    itemCount: cachedList.length,
                     itemBuilder: (context, index) {
-                      final katalog = _cachedList[index];
+                      final katalog = cachedList[index];
                       return Card(
                         margin: const EdgeInsets.only(bottom: 12),
                         color: Theme.of(context).colorScheme.surface,
@@ -115,6 +122,7 @@ class _KatalogListPageState extends State<KatalogListPage> {
                               '/katalog/detail',
                               arguments: {'id': katalog.katalog_id},
                             ).then((_) {
+                              if (!mounted) return;
                               if (_searchController.text.isEmpty) {
                                 context.read<KatalogBloc>().add(FetchKatalog());
                               } else {
@@ -187,10 +195,10 @@ class _KatalogListPageState extends State<KatalogListPage> {
                                     ),
                                   ],
                                 ),
-                                if (katalog.updated_at != null) ...[
+                                if (katalog.updated_at.isNotEmpty) ...[
                                   const SizedBox(height: 12),
                                   Text(
-                                    'Diperbarui: ${AppFormatters.formatDateTime(DateTime.tryParse(katalog.updated_at!))}',
+                                    'Diperbarui: ${AppFormatters.formatDateTime(DateTime.tryParse(katalog.updated_at))}',
                                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                           color: ShadTheme.of(context).colorScheme.mutedForeground,
                                         ),
@@ -212,6 +220,7 @@ class _KatalogListPageState extends State<KatalogListPage> {
                   onPressed: () {
                     Navigator.pushNamed(context, '/katalog/form')
                         .then((_) {
+                          if (!mounted) return;
                           if (_searchController.text.isEmpty) {
                             context.read<KatalogBloc>().add(FetchKatalog());
                           } else {
@@ -231,4 +240,3 @@ class _KatalogListPageState extends State<KatalogListPage> {
     );
   }
 }
-

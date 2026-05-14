@@ -21,6 +21,9 @@ class _KategoriFormPageState extends State<KategoriFormPage> {
   final _formKey = GlobalKey<ShadFormState>();
   final _namaController = TextEditingController();
 
+  /// Flag untuk memastikan Navigator.pop() hanya dipanggil SATU KALI.
+  bool _hasNavigated = false;
+
   bool get isEditing => widget.kategoriId != null;
 
   @override
@@ -61,11 +64,15 @@ class _KategoriFormPageState extends State<KategoriFormPage> {
       body: BlocListener<KategoriBloc, KategoriState>(
         listener: (context, state) {
           if (state is KategoriActionSuccess) {
+            // Guard: hanya pop SATU KALI.
+            if (_hasNavigated || !mounted) return;
+            _hasNavigated = true;
             ShadToaster.of(context).show(
               ShadToast(description: Text(state.message)),
             );
             Navigator.pop(context);
           } else if (state is KategoriError) {
+            if (!mounted) return;
             ShadToaster.of(context).show(
               ShadToast.destructive(description: Text(state.message)),
             );
