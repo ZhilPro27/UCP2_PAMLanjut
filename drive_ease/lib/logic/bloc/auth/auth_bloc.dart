@@ -1,4 +1,4 @@
-import 'package:drive_ease/data/repositories/Auth_repository.dart';
+import 'package:drive_ease/data/repositories/auth_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
@@ -10,8 +10,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({required this.repository}) : super(AuthInitial()) {
     on<AppStarted>((event, emit) async {
       final token = await repository.getToken();
-      if (token != null) {
-        emit(Authenticated(token));
+      final username = await repository.getUsername();
+      if (token != null && username != null) {
+        emit(Authenticated(token, username));
       } else {
         emit(Unauthenticated());
       }
@@ -24,16 +25,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         await repository.login(event.email, event.password);
         final token = await repository.getToken();
+        final username = await repository.getUsername();
 
-        if (token != null) {
-          emit(Authenticated(token));
-          developer.log('✅ Status: Authenticated ', name: 'AuthBloc');
+        if (token != null && username != null) {
+          emit(Authenticated(token, username));
+          developer.log('âœ… Status: Authenticated ', name: 'AuthBloc');
         } else {
-          throw 'Token tidak ditemukan setelah login';
+          throw 'Token atau username tidak ditemukan setelah login';
         }
       } catch (e) {
         emit(AuthError(e.toString()));
-        developer.log('❌ Status: AuthError - $e', name: 'AuthBloc');
+        developer.log('âŒ Status: AuthError - $e', name: 'AuthBloc');
       }
     });
 
@@ -42,17 +44,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try{
         await repository.register(event.username, event.email, event.password);
         emit(Unauthenticated());
-        developer.log('✅ Status: Register Success', name: 'AuthBloc');
+        developer.log('âœ… Status: Register Success', name: 'AuthBloc');
       } catch (e) {
         emit(AuthError(e.toString()));
-        developer.log('❌ Status: Register Error - $e', name: 'AuthBloc');
+        developer.log('âŒ Status: Register Error - $e', name: 'AuthBloc');
       }
     });
 
     on<LogoutRequested>((event, emit) async {
       await repository.deleteToken();
       emit(Unauthenticated());
-      developer.log('🚪 Status: Logged Out', name: 'AuthBloc');
+      developer.log('ðŸšª Status: Logged Out', name: 'AuthBloc');
     });
   }
 }

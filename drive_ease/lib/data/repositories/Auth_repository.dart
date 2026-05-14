@@ -12,12 +12,21 @@ class AuthRepository {
     await _storage.write(key: 'jwt_token', value: token);
   }
 
+  Future<void> persistUsername(String username) async {
+    await _storage.write(key: 'username', value: username);
+  }
+
   Future<String?> getToken() async {
     return await _storage.read(key: 'jwt_token');
   }
 
+  Future<String?> getUsername() async {
+    return await _storage.read(key: 'username');
+  }
+
   Future<void> deleteToken() async {
-    return await _storage.delete(key: 'jwt_token');
+    await _storage.delete(key: 'jwt_token');
+    await _storage.delete(key: 'username');
   }
 
   Future<UserModel> login(String email, String password) async {
@@ -40,7 +49,11 @@ class AuthRepository {
       if (response.statusCode == 200) {
         final token = data['token'];
         await persistToken(token);
-        return UserModel.fromJson(data);
+        
+        final userModel = UserModel.fromJson(data);
+        await persistUsername(userModel.username);
+        
+        return userModel;
       } else {
         String errorMessage = 'Gagal Login';
         if (data['message'] != null) {
