@@ -112,12 +112,15 @@ class KatalogRepository {
       }
     );
 
-    if(response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body); 
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
       return data.map((item) => KatalogModel.fromJson(item)).toList();
     } else {
-      final data = jsonDecode(response.body);
-      throw data['message'] ?? Exception('Gagal mencari katalog');
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      if (data['message'] == 'Katalog tidak ditemukan') {
+        return []; 
+      }
+      throw Exception(data['message'] ?? 'Gagal mencari katalog');
     }
   }
 }

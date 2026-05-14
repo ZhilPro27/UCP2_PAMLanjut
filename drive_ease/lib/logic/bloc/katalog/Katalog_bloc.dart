@@ -17,15 +17,15 @@ class KatalogBloc extends Bloc<KatalogEvent, KatalogState> {
         final list = await repository.getAllKatalog();
         emit(KatalogLoaded(list));
       } catch (e) {
-        emit(KatalogError(e.toString()));
+        emit(KatalogError(_cleanErrorMessage(e)));
       }
     });
 
     on<FetchKatalogById>((event, emit) async {
       emit(KatalogLoading());
       try {
-        final Katalog = await repository.getKatalogById(event.id);
-        emit(KatalogDetailLoaded(Katalog));
+        final katalog = await repository.getKatalogById(event.id);
+        emit(KatalogDetailLoaded(katalog));
       } catch (e) {
         emit(KatalogError(_cleanErrorMessage(e)));
       }
