@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
 class KatalogModel extends Equatable {
-  final String katalog_id;
+  final int katalog_id;
   final String nama;
   final String deskripsi;
-  final String kategori_id;
+  final int kategori_id;
   final double harga;
   final String kondisi;
   final String status;

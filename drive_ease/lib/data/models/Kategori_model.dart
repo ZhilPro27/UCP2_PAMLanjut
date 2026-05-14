@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class KategoriModel extends Equatable{
-  final String kategori_id;
+  final int kategori_id;
   final String nama;
   final String updated_at;
 
