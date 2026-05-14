@@ -7,6 +7,10 @@ class KategoriBloc extends Bloc<KategoriEvent, KategoriState> {
   final KategoriRepository repository;
 
   KategoriBloc({required this.repository}) : super(KategoriInitial()) {
+    String _cleanErrorMessage(Object error) {
+      return error.toString().replaceAll('Exception: ', '');
+    }
+
     on<FetchKategori>((event, emit) async {
       emit(KategoriLoading());
       try{
@@ -17,14 +21,24 @@ class KategoriBloc extends Bloc<KategoriEvent, KategoriState> {
       }
     });
 
+    on<FetchKategoriById>((event, emit) async {
+      emit(KategoriLoading());
+      try {
+        final kategori = await repository.getKategoriById(event.id);
+        emit(KategoriDetailLoaded(kategori));
+      } catch (e) {
+        emit(KategoriError(_cleanErrorMessage(e)));
+      }
+    });
+
     on<CreateKategori>((event, emit) async {
       emit(KategoriLoading());
       try {
         await repository.createKategori(event.data);
-        emit(KategoriCreatedSuccess());
+        emit(KategoriActionSuccess("Kategori berhasil ditambahkan"));
         add(FetchKategori());
       } catch (e) {
-        emit(KategoriError(e.toString()));
+        emit(KategoriError(_cleanErrorMessage(e)));
       }
     });
 
@@ -32,10 +46,10 @@ class KategoriBloc extends Bloc<KategoriEvent, KategoriState> {
       emit(KategoriLoading());
       try {
         await repository.updateKategori(event.id, event.data);
-        emit(KategoriCreatedSuccess());
+        emit(KategoriActionSuccess("Kategori berhasil diperbarui"));
         add(FetchKategori());
       } catch (e) {
-        emit(KategoriError(e.toString()));
+        emit(KategoriError(_cleanErrorMessage(e)));
       }
     });
 
@@ -43,10 +57,10 @@ class KategoriBloc extends Bloc<KategoriEvent, KategoriState> {
       emit(KategoriLoading());
       try {
         await repository.deleteKategori(event.id);
-        emit(KategoriCreatedSuccess());
+        emit(KategoriActionSuccess("Kategori berhasil dihapus"));
         add(FetchKategori());
       } catch (e) {
-        emit(KategoriError(e.toString()));
+        emit(KategoriError(_cleanErrorMessage(e)));
       }
     });
   }

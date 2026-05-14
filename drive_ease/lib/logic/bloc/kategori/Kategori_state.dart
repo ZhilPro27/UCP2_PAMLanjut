@@ -15,8 +15,21 @@ class KategoriLoaded extends KategoriState{
   @override
   List<Object> get props => [kategoriList];
 }
-class KategoriError extends KategoriState{
+class KategoriDetailLoaded extends KategoriState {
+  final KategoriModel kategori;
+  KategoriDetailLoaded(this.kategori);
+  @override
+  List<Object> get props => [kategori];
+}
+class KategoriError extends KategoriState {
   final String message;
   KategoriError(this.message);
+  @override
+  List<Object> get props => [message];
 }
-class KategoriCreatedSuccess extends KategoriState{}
+class KategoriActionSuccess extends KategoriState {
+  final String message;
+  KategoriActionSuccess(this.message);
+  @override
+  List<Object> get props => [message];
+}

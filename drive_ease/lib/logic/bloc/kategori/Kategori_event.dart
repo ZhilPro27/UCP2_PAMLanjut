@@ -6,6 +6,12 @@ abstract class KategoriEvent extends Equatable {
 }
 
 class FetchKategori extends KategoriEvent {}
+class FetchKategoriById extends KategoriEvent {
+  final int id;
+  FetchKategoriById(this.id);
+  @override
+  List<Object> get props => [id];
+}
 class CreateKategori extends KategoriEvent {
   final Map<String, dynamic> data;
   CreateKategori(this.data);
