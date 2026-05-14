@@ -57,9 +57,9 @@ class AppValidators {
     final req = requiredField(value, 'Nomor Polisi');
     if (req != null) return req;
 
-    final regex = RegExp(r'^[A-Z]{1,2}\s?[0-9]{1,4}\s?([A-Z]{1,3})?$');
+    final regex = RegExp(r'^[A-Z]{1,2}\s[0-9]{1,4}(\s[A-Z]{1,3})?$');
     if (!regex.hasMatch(value!.toUpperCase())) {
-      return 'Format nomor polisi tidak valid';
+      return 'Format nomor polisi tidak valid (contoh: B 1234 XY)';
     }
     return null;
   }

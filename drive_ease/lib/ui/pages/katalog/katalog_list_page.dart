@@ -63,6 +63,7 @@ class _KatalogListPageState extends State<KatalogListPage> {
           child: Stack(
             children: [
               BlocBuilder<KatalogBloc, KatalogState>(
+                buildWhen: (previous, current) => current is! KatalogActionSuccess,
                 builder: (context, state) {
                   if (state is KatalogLoaded) {
                     _cachedList = state.katalogList;

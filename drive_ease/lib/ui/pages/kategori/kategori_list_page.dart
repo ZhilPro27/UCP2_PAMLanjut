@@ -62,6 +62,7 @@ class _KategoriListPageState extends State<KategoriListPage> {
       child: Stack(
         children: [
           BlocBuilder<KategoriBloc, KategoriState>(
+            buildWhen: (previous, current) => current is! KategoriActionSuccess,
             builder: (context, state) {
               if (state is KategoriLoaded) {
                 _cachedList = state.kategoriList;
