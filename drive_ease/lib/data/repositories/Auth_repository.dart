@@ -40,7 +40,7 @@ class AuthRepository {
       if (response.statusCode == 200) {
         final token = data['token'];
         await persistToken(token);
-        return UserModel.fromJson(data['user']);
+        return UserModel.fromJson(data);
       } else {
         String errorMessage = 'Gagal Login';
         if (data['message'] != null) {

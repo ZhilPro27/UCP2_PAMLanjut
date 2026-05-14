@@ -19,8 +19,7 @@ class KatalogRepository {
     );
 
     if(response.statusCode == 200) {
-      final Map<String, dynamic> body = jsonDecode(response.body);
-      final List<dynamic> data = body['data'];
+      final List<dynamic> data = jsonDecode(response.body); 
       return data.map((item) => KatalogModel.fromJson(item)).toList();
     } else {
       throw Exception('Gagal mengambil data katalog');
@@ -95,7 +94,7 @@ class KatalogRepository {
 
     if(response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);
-      return KatalogModel.fromJson(body['data']);
+      return KatalogModel.fromJson(body);
     } else {
       final data = jsonDecode(response.body);
       throw data['message'] ?? Exception('Gagal mengambil data katalog');
@@ -114,8 +113,7 @@ class KatalogRepository {
     );
 
     if(response.statusCode == 200) {
-      final Map<String, dynamic> body = jsonDecode(response.body);
-      final List<dynamic> data = body['data'];
+      final List<dynamic> data = jsonDecode(response.body); 
       return data.map((item) => KatalogModel.fromJson(item)).toList();
     } else {
       final data = jsonDecode(response.body);

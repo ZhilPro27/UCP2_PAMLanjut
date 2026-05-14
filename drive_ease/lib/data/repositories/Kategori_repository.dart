@@ -19,8 +19,7 @@ class KategoriRepository {
     );
 
     if(response.statusCode == 200) {
-      final Map<String, dynamic> body = jsonDecode(response.body);
-      final List<dynamic> data = body['data'];
+      final List<dynamic> data = jsonDecode(response.body); 
       return data.map((item) => KategoriModel.fromJson(item)).toList();
     } else {
       throw Exception('Gagal mengambil data kategori');
@@ -95,7 +94,7 @@ class KategoriRepository {
 
     if(response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);
-      return KategoriModel.fromJson(body['data']);
+      return KategoriModel.fromJson(body);  
     } else {
       throw Exception('Gagal mengambil data kategori');
     }
