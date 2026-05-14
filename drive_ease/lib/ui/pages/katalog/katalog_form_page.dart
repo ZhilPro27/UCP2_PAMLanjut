@@ -141,10 +141,10 @@ class _KatalogFormPageState extends State<KatalogFormPage> {
                   label: const Text('Nama Kendaraan'),
                   placeholder: const Text('Masukkan nama kendaraan'),
                   controller: _namaController,
-                  validator: (v) {
-                    if (v.isEmpty) return 'Nama kendaraan tidak boleh kosong';
-                    return null;
-                  },
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]')),
+                  ],
+                  validator: (v) => AppValidators.nameWithoutSymbols(v, 'Nama Kendaraan'),
                 ),
                 const SizedBox(height: 16),
                 ShadInputFormField(
@@ -178,13 +178,13 @@ class _KatalogFormPageState extends State<KatalogFormPage> {
                           ),
                           ...state.kategoriList.map(
                             (k) => ShadOption(
-                              value: k.kategori_id,
+                              value: k.kategori_id.toString(),
                               child: Text(k.nama),
                             ),
                           )
                         ],
                         selectedOptionBuilder: (context, value) {
-                          final kat = state.kategoriList.firstWhere((e) => e.kategori_id == value);
+                          final kat = state.kategoriList.firstWhere((e) => e.kategori_id.toString() == value);
                           return Text(kat.nama);
                         },
                         initialValue: _selectedKategori,

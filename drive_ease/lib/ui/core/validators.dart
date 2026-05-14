@@ -63,4 +63,15 @@ class AppValidators {
     }
     return null;
   }
+
+  static String? nameWithoutSymbols(String? value, String fieldName) {
+    final req = requiredField(value, fieldName);
+    if (req != null) return req;
+
+    final regex = RegExp(r'^[a-zA-Z0-9\s]+$');
+    if (!regex.hasMatch(value!)) {
+      return '$fieldName tidak boleh mengandung simbol';
+    }
+    return null;
+  }
 }

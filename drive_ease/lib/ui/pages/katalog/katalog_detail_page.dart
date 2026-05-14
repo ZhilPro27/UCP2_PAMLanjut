@@ -150,13 +150,14 @@ class _KatalogDetailPageState extends State<KatalogDetailPage> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    Text(
-                      'Terakhir diperbarui: ${katalog.updated_at}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: ShadTheme.of(context).colorScheme.mutedForeground,
-                      ),
-                    ),
+                      if (katalog.updated_at != null)
+                        Text(
+                          'Terakhir diperbarui: ${AppFormatters.formatDateTime(DateTime.tryParse(katalog.updated_at!))}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: ShadTheme.of(context).colorScheme.mutedForeground,
+                          ),
+                        ),
                   ],
                 ),
               );

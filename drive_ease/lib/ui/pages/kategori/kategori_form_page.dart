@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:flutter/services.dart';
 
 import '../../../logic/bloc/kategori/kategori_bloc.dart';
 import '../../../logic/bloc/kategori/kategori_event.dart';
 import '../../../logic/bloc/kategori/kategori_state.dart';
+import '../../core/validators.dart';
 
 class KategoriFormPage extends StatefulWidget {
   final int? kategoriId;
@@ -85,10 +87,10 @@ class _KategoriFormPageState extends State<KategoriFormPage> {
                   label: const Text('Nama Kategori'),
                   placeholder: const Text('Masukkan nama kategori'),
                   controller: _namaController,
-                  validator: (v) {
-                    if (v.isEmpty) return 'Nama kategori tidak boleh kosong';
-                    return null;
-                  },
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s]')),
+                  ],
+                  validator: (v) => AppValidators.nameWithoutSymbols(v, 'Nama Kategori'),
                 ),
                 const SizedBox(height: 32),
                 BlocBuilder<KategoriBloc, KategoriState>(

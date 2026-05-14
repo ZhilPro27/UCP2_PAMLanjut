@@ -5,6 +5,8 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../../logic/bloc/kategori/kategori_bloc.dart';
 import '../../../logic/bloc/kategori/kategori_event.dart';
 import '../../../logic/bloc/kategori/kategori_state.dart';
+import '../../../data/models/kategori_model.dart';
+import '../../core/formatters.dart';
 import '../../widgets/loading_skeleton.dart';
 import '../../widgets/error_widget.dart';
 import '../../widgets/empty_state_widget.dart';
@@ -18,6 +20,8 @@ class KategoriListPage extends StatefulWidget {
 }
 
 class _KategoriListPageState extends State<KategoriListPage> {
+  List<KategoriModel> _cachedList = [];
+
   @override
   void initState() {
     super.initState();
@@ -59,87 +63,93 @@ class _KategoriListPageState extends State<KategoriListPage> {
         children: [
           BlocBuilder<KategoriBloc, KategoriState>(
             builder: (context, state) {
+              if (state is KategoriLoaded) {
+                _cachedList = state.kategoriList;
+              }
+
               if (state is KategoriLoading || state is KategoriInitial) {
-                return const LoadingSkeleton();
-              } else if (state is KategoriError) {
+                if (_cachedList.isEmpty) {
+                  return const LoadingSkeleton();
+                }
+              } else if (state is KategoriError && _cachedList.isEmpty) {
                 return ErrorStateWidget(
                   message: state.message,
                   onRetry: () => context.read<KategoriBloc>().add(FetchKategori()),
                 );
-              } else if (state is KategoriLoaded) {
-                final kategoriList = state.kategoriList;
-                if (kategoriList.isEmpty) {
-                  return const EmptyStateWidget(
-                    title: 'Kategori Kosong',
-                    message: 'Belum ada kategori yang ditambahkan.',
-                    icon: Icons.category_outlined,
-                  );
-                }
+              }
 
-                return ListView.builder(
-                  padding: const EdgeInsets.only(
-                      left: 16, right: 16, top: 16, bottom: 80),
-                  itemCount: kategoriList.length,
-                  itemBuilder: (context, index) {
-                    final kategori = kategoriList[index];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      color: Theme.of(context).colorScheme.surface,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(
-                          color: ShadTheme.of(context).colorScheme.border,
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    kategori.nama,
-                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    'Diperbarui: ${kategori.updated_at}',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: ShadTheme.of(context).colorScheme.mutedForeground,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.edit, size: 20),
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  '/kategori/form',
-                                  arguments: {'id': kategori.kategori_id},
-                                ).then((_) => context.read<KategoriBloc>().add(FetchKategori()));
-                              },
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.delete, size: 20, color: ShadTheme.of(context).colorScheme.destructive),
-                              onPressed: () => _showDeleteDialog(kategori.kategori_id),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+              if (_cachedList.isEmpty && !(state is KategoriLoading || state is KategoriInitial)) {
+                return const EmptyStateWidget(
+                  title: 'Kategori Kosong',
+                  message: 'Belum ada kategori yang ditambahkan.',
+                  icon: Icons.category_outlined,
                 );
               }
-              return const SizedBox.shrink();
+
+              return ListView.builder(
+                padding: const EdgeInsets.only(
+                    left: 16, right: 16, top: 16, bottom: 80),
+                itemCount: _cachedList.length,
+                itemBuilder: (context, index) {
+                  final kategori = _cachedList[index];
+                  final parsedDate = DateTime.tryParse(kategori.updated_at);
+                  
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    color: Theme.of(context).colorScheme.surface,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(
+                        color: ShadTheme.of(context).colorScheme.border,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  kategori.nama,
+                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Diperbarui: ${AppFormatters.formatDateTime(parsedDate)}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: ShadTheme.of(context).colorScheme.mutedForeground,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.edit, size: 20),
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/kategori/form',
+                                arguments: {'id': kategori.kategori_id},
+                              ).then((_) => context.read<KategoriBloc>().add(FetchKategori()));
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, size: 20, color: ShadTheme.of(context).colorScheme.destructive),
+                            onPressed: () => _showDeleteDialog(kategori.kategori_id),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
             },
           ),
           Positioned(
